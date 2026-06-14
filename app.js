@@ -576,34 +576,33 @@ function renderTeams() {
 
 function initTeamDragAndDrop() {
   document.querySelectorAll('.team-body').forEach(body => {
-    body.addEventListener('dragover', e => {
-      e.preventDefault();
-      body.classList.add('drag-over');
-    });
-    body.addEventListener('dragleave', () => {
-      body.classList.remove('drag-over');
-    });
+    Sortable.create(body, {
+      animation: 150,
+      ghostClass: 'drag-ghost',
+      chosenClass: 'drag-chosen',
+      dragClass: 'drag-dragging',
+      group: 'teams',
 
-    body.addEventListener('drop', e => {
-      e.preventDefault();
-      body.classList.remove('drag-over');
+      onEnd: function (evt) {
+        const playerId = parseInt(evt.item.dataset.playerId, 10);
+        const newTeam = evt.to.getAttribute('data-team-body');
 
-      const idStr = e.dataTransfer.getData('text/plain');
-      const id = parseInt(idStr, 10);
-      const player = players.find(p => p.id === id);
-      if (!player) return;
+        const player = players.find(p => p.id === playerId);
+        if (!player) return;
 
-      const team = body.getAttribute('data-team-body');
-      player.permanentTeam = team === 'Unassigned' ? null : team;
-      savePlayersToFirebase();
-      renderTeams();
-      renderPlayers();
-      renderSession();
-      renderAnalytics();
-      renderBibOverview();
+        player.permanentTeam = newTeam === 'Unassigned' ? null : newTeam;
+
+        savePlayersToFirebase();
+        renderTeams();
+        renderPlayers();
+        renderSession();
+        renderAnalytics();
+        renderBibOverview();
+      }
     });
   });
 }
+
 
 // ==== PHOTO MODAL ====
 
