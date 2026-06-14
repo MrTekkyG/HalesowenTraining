@@ -169,6 +169,18 @@ button{border:none;border-radius:999px;padding:8px 12px;font-size:.9rem;font-wei
   gap: 10px;
 }
 
+.drag-ghost {
+  opacity: 0.4;
+}
+
+.drag-chosen {
+  border: 2px dashed #999;
+}
+
+.drag-dragging {
+  opacity: 0.7;
+}
+
 
 
 .section{display:none}
