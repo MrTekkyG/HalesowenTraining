@@ -146,12 +146,13 @@ function formatUkDate(dateStr) {
 
 function resizeImage(file, cb) {
   const reader = new FileReader();
+
   reader.onload = e => {
     const img = new Image();
 
     img.onload = () => {
-      // Limit max size to avoid mobile memory crash
-      const MAX = 800; // safe for all devices
+      // Hard safety limit for mobile browsers
+      const MAX = 600;
 
       let w = img.width;
       let h = img.height;
@@ -168,16 +169,23 @@ function resizeImage(file, cb) {
         }
       }
 
+      // Create a SAFE canvas size
       const canvas = document.createElement('canvas');
       canvas.width = w;
       canvas.height = h;
 
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+      // Draw scaled image
       ctx.drawImage(img, 0, 0, w, h);
 
-      cb(canvas.toDataURL('image/jpeg', 0.7));
+      // Convert to JPEG
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+
+      cb(dataUrl);
     };
 
+    // This prevents Safari from choking on large images
     img.src = e.target.result;
   };
 
