@@ -148,17 +148,39 @@ function resizeImage(file, cb) {
   const reader = new FileReader();
   reader.onload = e => {
     const img = new Image();
+
     img.onload = () => {
+      // Limit max size to avoid mobile memory crash
+      const MAX = 800; // safe for all devices
+
+      let w = img.width;
+      let h = img.height;
+
+      if (w > h) {
+        if (w > MAX) {
+          h = Math.round(h * (MAX / w));
+          w = MAX;
+        }
+      } else {
+        if (h > MAX) {
+          w = Math.round(w * (MAX / h));
+          h = MAX;
+        }
+      }
+
       const canvas = document.createElement('canvas');
-      const size = 300;
-      canvas.width = size;
-      canvas.height = size;
+      canvas.width = w;
+      canvas.height = h;
+
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, size, size);
-      cb(canvas.toDataURL('image/jpeg', 0.8));
+      ctx.drawImage(img, 0, 0, w, h);
+
+      cb(canvas.toDataURL('image/jpeg', 0.7));
     };
+
     img.src = e.target.result;
   };
+
   reader.readAsDataURL(file);
 }
 
