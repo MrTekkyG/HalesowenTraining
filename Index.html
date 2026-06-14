@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Training Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header>
+    <div>
+      <h1>Training Register</h1>
+      <small>Tap to mark attendance, assign bibs, and manage players.</small>
+    </div>
+    <span id="todayLabel"></span>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="session">Today</button>
+    <button class="tab-btn" data-tab="players">Players</button>
+    <button class="tab-btn" data-tab="teams">Teams</button>
+    <button class="tab-btn" data-tab="analytics">Analytics</button>
+  </div>
+
+  <!-- TODAY SECTION -->
+<section id="section-session" class="section active">
+  <div class="card">
+    <div class="card-header">
+      <h2>Today’s Session</h2>
+      <span id="sessionSummary">0 attending</span>
+    </div>
+
+    <div class="row">
+      <button id="btnClearSession" class="btn-outline btn-small">Clear today</button>
+      <button id="btnRandomTeams" class="btn-outline btn-small">Randomise bibs</button>
+
+      <select id="teamCountSelect">
+        <option value="2">2 teams</option>
+        <option value="3">3 teams</option>
+        <option value="4">4 teams</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <input type="checkbox" id="toggleHideAbsent">
+      <label for="toggleHideAbsent">Hide absent players</label>
+    </div>
+  </div>
+
+  <!-- ⭐ BIB OVERVIEW PANEL -->
+  <div class="card">
+    <div id="bibOverview" class="bib-overview"></div>
+  </div>
+
+  <div class="card">
+    <div class="list" id="sessionList"></div>
+  </div>
+</section>
+
+
+  <!-- PLAYERS SECTION -->
+  <section id="section-players" class="section">
+    <div class="card">
+      <div class="card-header">
+        <h2>Players</h2>
+        <span id="playersCountLabel">0 players</span>
+      </div>
+      <div class="row">
+        <input type="text" id="newPlayerName" placeholder="New player name">
+        <button id="btnAddPlayer" class="btn-primary">Add</button>
+      </div>
+      <div class="row">
+        <button id="btnExport" class="btn-outline btn-small">Export names</button>
+        <button id="btnImport" class="btn-outline btn-small">Import names</button>
+        <button id="btnDeleteAll" class="btn-danger btn-small">Delete all</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="list" id="playersList"></div>
+    </div>
+  </section>
+
+  <!-- TEAMS SECTION -->
+
+<div id="section-teams" class="section">
+  <h2>Permanent Teams</h2>
+
+  <!-- Outer white container (this was missing before) -->
+  <div class="team-box" style="padding: 15px;">
+
+    <!-- Unassigned full-width row -->
+    <div class="team-row-full" style="margin-bottom: 20px;">
+      <h3>Unassigned (<span data-team-count="Unassigned">0</span>)</h3>
+      <div class="team-body" data-team-body="Unassigned"></div>
+    </div>
+
+    <!-- Four teams in a grid -->
+    <div class="team-grid">
+      <div class="team-box">
+        <h3>North (<span data-team-count="North">0</span>)</h3>
+        <div class="team-body" data-team-body="North"></div>
+      </div>
+
+      <div class="team-box">
+        <h3>South (<span data-team-count="South">0</span>)</h3>
+        <div class="team-body" data-team-body="South"></div>
+      </div>
+
+      <div class="team-box">
+        <h3>East (<span data-team-count="East">0</span>)</h3>
+        <div class="team-body" data-team-body="East"></div>
+      </div>
+
+      <div class="team-box">
+        <h3>West (<span data-team-count="West">0</span>)</h3>
+        <div class="team-body" data-team-body="West"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+  <!-- ANALYTICS SECTION -->
+  <section id="section-analytics" class="section">
+    <div class="card">
+      <div class="card-header">
+        <h2>Attendance Analytics</h2>
+        <button id="btnExportAnalytics" class="btn-outline btn-small">Export CSV</button>
+      </div>
+      <div class="analytics-table-wrapper">
+        <table class="analytics-table" id="analyticsTable">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Sessions</th>
+              <th>Attended</th>
+              <th>%</th>
+              <th>Last Attended</th>
+              <th>Streak</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- PHOTO MODAL -->
+<div id="photoModal">
+  <img id="modalPhoto" src="">
+  <div class="modal-buttons">
+    <button id="btnChangePhoto" class="btn-primary">Change</button>
+    <button id="btnRemovePhoto" class="btn-danger">Remove</button>
+    <button id="btnCloseModal" class="btn-outline">Close</button>
+  </div>
+</div>
+
+<input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBio9qv-maNBH4lTNJ3-R7rbjbF-z1uXos",
+    authDomain: "coachingapp-84fb7.firebaseapp.com",
+    databaseURL: "https://coachingapp-84fb7-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "coachingapp-84fb7",
+    storageBucket: "coachingapp-84fb7.firebasestorage.app",
+    messagingSenderId: "429527320365",
+    appId: "1:429527320365:web:70705db59f53643a78b5a4"
+  };
+  firebase.initializeApp(firebaseConfig);
+</script>
+
+<script src="app.js"></script>
+</body>
+</html>
