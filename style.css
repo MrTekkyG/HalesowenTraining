@@ -178,10 +178,14 @@ button {
   border-radius: 6px;
 }
 
-/* ===== TEAMS (2×2 GRID) ===== */
-.teams-container {
+/* ============================================================
+   TEAMS LAYOUT — 4 COLUMNS ON DESKTOP, 2 COLUMNS ON MOBILE
+   NO INTERNAL SCROLLING — PAGE SCROLL ONLY
+   ============================================================ */
+
+.team-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 }
 
@@ -192,6 +196,7 @@ button {
   border-radius: 8px;
 }
 
+/* IMPORTANT: remove scroll inside team boxes */
 .team-body {
   margin-top: 10px;
   max-height: none !important;
@@ -226,6 +231,13 @@ button {
 .team-stars .star {
   font-size: 14px;
   cursor: pointer;
+}
+
+/* ===== MOBILE TEAMS ===== */
+@media (max-width: 768px) {
+  .team-grid {
+    grid-template-columns: 1fr 1fr; /* 2 columns on mobile */
+  }
 }
 
 /* ===== ANALYTICS TABLE ===== */
@@ -331,16 +343,8 @@ button {
   gap: 10px;
 }
 
-/* ===== MOBILE ===== */
+/* ===== MOBILE GENERAL ===== */
 @media (max-width: 768px) {
-  .teams-container {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .team-player {
-    padding: 8px 0;
-  }
-
   .payment-row {
     flex-direction: column;
     align-items: flex-start;
