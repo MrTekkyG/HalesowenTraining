@@ -66,6 +66,10 @@ button{border:none;border-radius:999px;padding:8px 12px;font-size:.9rem;font-wei
   flex-direction:column;
   gap:6px;
   min-height:150px;
+  /* no internal scroll */
+  max-height:none;
+  height:auto;
+  overflow:visible;
 }
 .team-body.drag-over{
   outline:2px dashed var(--primary);
