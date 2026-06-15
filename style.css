@@ -66,10 +66,6 @@ button{border:none;border-radius:999px;padding:8px 12px;font-size:.9rem;font-wei
   flex-direction:column;
   gap:6px;
   min-height:150px;
-  /* ONLY CHANGE: remove internal scroll */
-  max-height:none;
-  height:auto;
-  overflow:visible;
 }
 .team-body.drag-over{
   outline:2px dashed var(--primary);
@@ -155,13 +151,7 @@ button{border:none;border-radius:999px;padding:8px 12px;font-size:.9rem;font-wei
   border: 1px solid #ddd;
 }
 
-.team-player {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
+/* Unassigned layout */
 .team-body[data-team-body="Unassigned"] {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
