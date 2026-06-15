@@ -18,6 +18,7 @@
     <span id="todayLabel"></span>
   </header>
 
+  <!-- TAB BAR -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="session">Today</button>
     <button class="tab-btn" data-tab="players">Players</button>
@@ -26,7 +27,7 @@
     <button class="tab-btn" data-tab="paymentsToday">Payments Today</button>
   </div>
 
-  <!-- TODAY -->
+  <!-- TODAY SECTION -->
   <section id="section-session" class="section active">
     <div class="card">
       <div class="card-header">
@@ -60,7 +61,7 @@
     </div>
   </section>
 
-  <!-- PLAYERS -->
+  <!-- PLAYERS SECTION -->
   <section id="section-players" class="section">
     <div class="card">
       <div class="card-header">
@@ -85,7 +86,7 @@
     </div>
   </section>
 
-  <!-- TEAMS (RESTORED 4‑COLUMN) -->
+  <!-- TEAMS SECTION (4‑COLUMN PERMANENT TEAMS) -->
   <section id="section-teams" class="section">
     <h2>Permanent Teams</h2>
 
@@ -99,8 +100,9 @@
         </div>
       </div>
 
-      <!-- 4‑column grid -->
+      <!-- 4‑column grid for North / South / East / West -->
       <div class="team-grid">
+
         <div class="team-box">
           <h3>North (<span data-team-count="North">0</span>)</h3>
           <div class="team-body" data-team-body="North"></div>
@@ -120,12 +122,13 @@
           <h3>West (<span data-team-count="West">0</span>)</h3>
           <div class="team-body" data-team-body="West"></div>
         </div>
+
       </div>
 
     </div>
   </section>
 
-  <!-- ANALYTICS -->
+  <!-- ANALYTICS SECTION -->
   <section id="section-analytics" class="section">
     <div class="card">
       <div class="card-header">
@@ -151,7 +154,7 @@
     </div>
   </section>
 
-  <!-- PAYMENTS TODAY -->
+  <!-- PAYMENTS TODAY SECTION -->
   <section id="section-paymentsToday" class="section">
     <div class="card">
       <div class="card-header">
