@@ -1,227 +1,361 @@
-:root{
-  --bg:#f5f7fb;--card:#ffffff;--primary:#1e88e5;--primary-dark:#1565c0;
-  --accent:#0d47a1;--text:#1f2933;--muted:#6b7280;--border:#d1d5db;
-  --danger:#e53935;--success:#43a047;--radius:10px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:12px}
-.app{max-width:900px;margin:0 auto}
-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-header h1{font-size:1.4rem;font-weight:700;color:var(--accent)}
-header small{color:var(--muted);font-size:.8rem}
-.tabs{display:flex;gap:8px;margin-bottom:12px}
-.tab-btn{flex:1;padding:8px 10px;border-radius:999px;border:1px solid var(--border);background:#e5edf9;color:var(--primary-dark);font-size:.9rem;font-weight:600;cursor:pointer}
-.tab-btn.active{background:var(--primary);color:#fff}
-.card{background:var(--card);border-radius:var(--radius);padding:12px;box-shadow:0 2px 6px rgba(15,23,42,.08);margin-bottom:12px}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.card-header h2{font-size:1rem;font-weight:600}
-.card-header span{font-size:.8rem;color:var(--muted)}
-.row{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap}
-input[type=text]{flex:1;padding:8px 10px;border-radius:999px;border:1px solid var(--border);font-size:.9rem}
-select{padding:6px 8px;border-radius:999px;border:1px solid var(--border);font-size:.85rem;background:#f9fafb}
-button{border:none;border-radius:999px;padding:8px 12px;font-size:.9rem;font-weight:600;cursor:pointer}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--text)}
-.btn-danger{background:var(--danger);color:#fff}
-.btn-small{padding:4px 8px;font-size:.75rem}
-.list{max-height:60vh;overflow-y:auto;border-radius:var(--radius);border:1px solid var(--border)}
-.list-item{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:1px solid #edf0f4;background:#fff}
-.list-item:nth-child(even){background:#f8fafc}
-.list-item:last-child{border-bottom:none}
-.list-main{display:flex;align-items:center;gap:10px;flex:1}
-.player-photo{width:70px;height:70px;background:#d9d9d9;border-radius:6px;object-fit:cover;cursor:pointer}
-#photoModal{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:9999}
-#photoModal img{max-width:90%;max-height:70%;border-radius:6px}
-#photoModal .modal-buttons{margin-top:20px;display:flex;gap:10px}
-.checkbox{width:20px;height:20px;border-radius:6px;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer}
-.checkbox.checked{border-color:var(--success);background:#e8f5e9}
-.checkbox.checked::after{content:"✓";font-size:.8rem;color:var(--success);font-weight:700}
-.player-name{font-size:.95rem;font-weight:500}
-.player-meta{font-size:.75rem;color:var(--muted)}
-.empty{padding:10px;text-align:center;color:var(--muted)}
-
-.teams-grid{
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:8px;
-}
-.team-column{
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  background:#f9fafb;
-  display:flex;
-  flex-direction:column;
-  min-height:200px;
-}
-.team-header{
-  padding:6px 8px;
-  font-size:.85rem;
-  font-weight:600;
-  background:#e5edf9;
-  border-bottom:1px solid var(--border);
-}
-.team-body{
-  padding:6px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-  min-height:150px;
-}
-.team-body.drag-over{
-  outline:2px dashed var(--primary);
-}
-.team-player{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:4px 6px;
-  border-radius:6px;
-  background:#fff;
-  border:1px solid #e5e7eb;
-}
-.team-player-name{
-  font-size:.85rem;
-}
-.team-player img{
-  width:40px;
-  height:40px;
-  border-radius:4px;
-  object-fit:cover;
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
 }
 
-/* Ability stars */
-.ability-stars, .team-stars{
-  display:flex;
-  gap:2px;
-  margin-top:2px;
-}
-.star{
-  font-size:1rem;
-  color:#cbd5e1;
-  cursor:pointer;
-  user-select:none;
-}
-.star.filled{
-  color:#fbbf24;
+.app {
+  max-width: 900px;
+  margin: auto;
+  padding-bottom: 40px;
 }
 
-/* Analytics table */
-.analytics-table-wrapper{
-  overflow-x:auto;
-}
-.analytics-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:.85rem;
-}
-.analytics-table th,
-.analytics-table td{
-  padding:6px 8px;
-  border-bottom:1px solid var(--border);
-  text-align:left;
-}
-.analytics-table th{
-  background:#e5edf9;
-  font-weight:600;
-}
-.analytics-table tr:nth-child(even){
-  background:#f8fafc;
+h1, h2, h3 {
+  margin: 0;
 }
 
-#teamsContainer {
+/* ===== HEADER ===== */
+header {
+  background: #222;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header small {
+  opacity: 0.7;
+}
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: #eee;
+  font-size: 16px;
+}
+
+.tab-btn.active {
+  background: #fff;
+  border-bottom: 3px solid #007bff;
+  font-weight: bold;
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  display: none;
+  padding: 15px;
+}
+
+.section.active {
+  display: block;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== ROWS ===== */
+.row {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+  align-items: center;
+}
+
+/* ===== BUTTONS ===== */
+button {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.btn-outline {
+  background: white;
+  border: 1px solid #007bff;
+  color: #007bff;
+}
+
+.btn-danger {
+  background: #d9534f;
+  color: white;
+}
+
+.btn-small {
+  padding: 5px 10px;
+  font-size: 13px;
+}
+
+/* ===== LISTS ===== */
+.list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
 }
 
-.team-row-full {
-  width: 100%;
+.list-item {
+  background: #fafafa;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
+.list-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.player-photo {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ccc;
+}
+
+.player-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.player-meta {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+/* ===== CHECKBOX ===== */
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+}
+
+.checkbox.checked {
+  background: #007bff;
+}
+
+/* ===== BIB OVERVIEW ===== */
+.bib-overview {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bib-box {
+  padding: 8px;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   TEAMS LAYOUT — 4 COLUMNS ON DESKTOP, 2 COLUMNS ON MOBILE
+   NO INTERNAL SCROLLING — PAGE SCROLL ONLY
+   ============================================================ */
 
 .team-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 15px;
 }
 
 .team-box {
   background: white;
-  border-radius: 8px;
-  padding: 10px;
   border: 1px solid #ddd;
+  padding: 12px;
+  border-radius: 8px;
 }
 
+/* IMPORTANT: remove scroll inside team boxes */
 .team-body {
-  max-height: 400px;
-  overflow-y: auto;
+  margin-top: 10px;
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
 }
 
 .team-player {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.team-body[data-team-body="Unassigned"] {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+.team-player:last-child {
+  border-bottom: none;
+}
+
+.team-player-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.team-player-name {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.team-stars .star {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ===== MOBILE TEAMS ===== */
+@media (max-width: 768px) {
+  .team-grid {
+    grid-template-columns: 1fr 1fr; /* 2 columns on mobile */
+  }
+}
+
+/* ===== ANALYTICS TABLE ===== */
+.analytics-table-wrapper {
+  overflow-x: auto;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.analytics-table th,
+.analytics-table td {
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+/* ===== PAYMENTS TODAY ===== */
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.payment-player {
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
-.drag-ghost {
-  opacity: 0.4;
+.payment-photo {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.drag-chosen {
-  border: 2px dashed #999;
+.payment-buttons {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
-.drag-dragging {
-  opacity: 0.7;
+.payment-status {
+  font-weight: bold;
+  margin-left: 5px;
 }
 
+/* ACTIVE PAYMENT BUTTONS */
 .payment-buttons button.active-payment {
-  background-color: #2e7d32;
-  color: #fff;
-  border-color: #2e7d32;
+  background: #2e7d32 !important;
+  color: white !important;
+  border: 1px solid #2e7d32 !important;
 }
+
 .payment-buttons button.no-pay.active-payment {
-  background-color: #b71c1c;
-  border-color: #b71c1c;
+  background: #b71c1c !important;
+  border-color: #b71c1c !important;
+  color: white !important;
 }
 
-/* ===== MOBILE 2×2 GRID FOR TEAMS ===== */
+/* ===== PAYMENT HISTORY ===== */
+.payment-history-container {
+  padding: 10px 12px;
+  background: #fafafa;
+  border-left: 3px solid #007bff;
+  margin-bottom: 10px;
+}
+
+.payment-history-toggle {
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+/* ===== PHOTO MODAL ===== */
+#photoModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#modalPhoto {
+  max-width: 80%;
+  max-height: 60%;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===== MOBILE GENERAL ===== */
 @media (max-width: 768px) {
+  .payment-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
 
-  .teams-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+  .payment-buttons {
     width: 100%;
   }
 
-  .team-box {
-    width: 100%;
-    margin: 0;
-  }
-
-  /* Remove scroll inside team bodies */
-  .team-body {
-    max-height: none !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  /* Player cards scale nicely */
-  .team-player {
-    width: 100%;
+  .payment-buttons button {
+    flex: 1;
   }
 }
-
-
-
-
-.section{display:none}
-.section.active{display:block}
-
