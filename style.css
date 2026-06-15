@@ -169,58 +169,9 @@ button{border:none;border-radius:999px;padding:8px 12px;font-size:.9rem;font-wei
   gap: 10px;
 }
 
-.drag-ghost {
-  opacity: 0.4;
-}
-
-.drag-chosen {
-  border: 2px dashed #999;
-}
-
-.drag-dragging {
-  opacity: 0.7;
-}
-
-.payment-buttons button.active-payment {
-  background-color: #2e7d32;
-  color: #fff;
-  border-color: #2e7d32;
-}
-.payment-buttons button.no-pay.active-payment {
-  background-color: #b71c1c;
-  border-color: #b71c1c;
-}
-
-/* ===== MOBILE 2×2 GRID FOR TEAMS ===== */
-@media (max-width: 768px) {
-
-  .teams-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    width: 100%;
-  }
-
-  .team-box {
-    width: 100%;
-    margin: 0;
-  }
-
-  /* Remove scroll inside team bodies */
-  .team-body {
-    max-height: none !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  /* Player cards scale nicely */
-  .team-player {
-    width: 100%;
-  }
-}
-
-
 
 
 .section{display:none}
 .section.active{display:block}
+
+
