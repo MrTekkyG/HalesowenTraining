@@ -18,6 +18,17 @@
     <span id="todayLabel"></span>
   </header>
 
+  <!-- GROUP FILTER -->
+  <div class="filter-bar">
+    <label for="groupFilter">Group:</label>
+    <select id="groupFilter">
+      <option value="All">All</option>
+      <option value="Year 1">Year 1</option>
+      <option value="Reception">Reception</option>
+      <option value="Girls">Girls</option>
+    </select>
+  </div>
+
   <!-- TAB BAR -->
   <div class="tabs">
     <button class="tab-btn active" data-tab="session">Today</button>
@@ -71,6 +82,12 @@
 
       <div class="row">
         <input type="text" id="newPlayerName" placeholder="New player name">
+        <select id="newPlayerGroup">
+          <option value="">No group</option>
+          <option value="Year 1">Year 1</option>
+          <option value="Reception">Reception</option>
+          <option value="Girls">Girls</option>
+        </select>
         <button id="btnAddPlayer" class="btn-primary">Add</button>
       </div>
 
@@ -180,8 +197,8 @@
 <input type="file" id="photoInput" accept="image/*" capture="environment" style="display:none">
 
 <!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.4/firebase-database-compat.js"></script>
 
 <script>
   const firebaseConfig = {
