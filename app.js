@@ -63,6 +63,14 @@ function initFirebaseListeners() {
       if (p.balance == null) p.balance = 0;
       if (!p.payments) p.payments = [];
       if (!p.group) p.group = null;
+      if (p.photo === undefined) p.photo = null;
+      Object.keys(p.attendanceHistory).forEach(date => {
+        const rec = p.attendanceHistory[date];
+        if (rec) {
+          if (rec.attended === undefined) rec.attended = false;
+          if (!rec.bib) rec.bib = null;
+        }
+      });
     });
 
     renderPlayers();
@@ -83,6 +91,15 @@ function initFirebaseListeners() {
       return;
     }
     session = data;
+    if (session.attendance) {
+      Object.keys(session.attendance).forEach(id => {
+        const rec = session.attendance[id];
+        if (rec) {
+          if (rec.attended === undefined) rec.attended = false;
+          if (!rec.bib) rec.bib = null;
+        }
+      });
+    }
     renderSession();
     renderAnalytics();
     renderBibOverview();
@@ -106,24 +123,23 @@ function getAttendanceFor(id) {
   if (!session.attendance[id]) {
     session.attendance[id] = { attended: false, bib: null };
   }
+  if (!session.attendance[id].bib) {
+    session.attendance[id].bib = null;
+  }
+  if (session.attendance[id].attended === undefined) {
+    session.attendance[id].attended = false;
+  }
   return session.attendance[id];
 }
 
 function ensureTodaySessionExists() {
   const date = todayISO();
-  let exists = false;
-  for (const p of players) {
-    if (p.attendanceHistory && p.attendanceHistory[date]) {
-      exists = true;
-      break;
-    }
-  }
-  if (!exists) {
-    players.forEach(p => {
-      if (!p.attendanceHistory) p.attendanceHistory = {};
+  players.forEach(p => {
+    if (!p.attendanceHistory) p.attendanceHistory = {};
+    if (!p.attendanceHistory[date]) {
       p.attendanceHistory[date] = { attended: false, bib: null };
-    });
-  }
+    }
+  });
 }
 
 function removeTodaySessionIfEmpty() {
@@ -338,7 +354,7 @@ function renderSession() {
         if (!player.attendanceHistory) player.attendanceHistory = {};
         ensureTodaySessionExists();
         player.attendanceHistory[date].attended = att.attended;
-        player.attendanceHistory[date].bib = att.bib;
+        player.attendanceHistory[date].bib = att.bib || null;
 
         applyAttendanceCharge(player, prevAttended, att.attended);
         removeTodaySessionIfEmpty();
@@ -378,7 +394,7 @@ function renderSession() {
         if (!player.attendanceHistory) player.attendanceHistory = {};
         ensureTodaySessionExists();
         player.attendanceHistory[date].attended = att.attended;
-        player.attendanceHistory[date].bib = att.bib;
+        player.attendanceHistory[date].bib = att.bib || null;
 
         applyAttendanceCharge(player, prevAttended, att.attended);
         removeTodaySessionIfEmpty();
@@ -750,7 +766,7 @@ function randomiseBibs(teamCount) {
 
     if (!p.attendanceHistory) p.attendanceHistory = {};
     p.attendanceHistory[date].attended = true;
-    p.attendanceHistory[date].bib = att.bib;
+    p.attendanceHistory[date].bib = att.bib || null;
 
     applyAttendanceCharge(p, prevAttended, att.attended);
   });
