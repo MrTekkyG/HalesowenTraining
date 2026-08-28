@@ -1,10 +1,23 @@
 // ==== FIREBASE SETUP ====
 const db = firebase.database();
 
+window.addEventListener('unhandledrejection', event => {
+  console.error('Unhandled Firebase error:', event.reason);
+});
+
+db.ref('.info/connected').on('value', snap => {
+  console.log('Firebase connection state:', snap.val() ? 'CONNECTED' : 'DISCONNECTED');
+});
+
+function logFirebaseError(context, err) {
+  console.error(`Firebase error [${context}]:`, err);
+}
+
 // ==== KEYS & LOCAL STATE ====
 let players = [];
 let session = { date: null, attendance: {} };
 let currentPhotoPlayerId = null;
+let currentGroupFilter = 'All';
 
 const TEAM_BIB_MAP = {
   North: 'blue',
@@ -15,6 +28,11 @@ const TEAM_BIB_MAP = {
 
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function getFilteredPlayers() {
+  if (currentGroupFilter === 'All') return players;
+  return players.filter(p => p.group === currentGroupFilter);
 }
 
 // ==== FIREBASE HELPERS ====
@@ -44,6 +62,7 @@ function initFirebaseListeners() {
       if (!p.attendanceHistory) p.attendanceHistory = {};
       if (p.balance == null) p.balance = 0;
       if (!p.payments) p.payments = [];
+      if (!p.group) p.group = null;
     });
 
     renderPlayers();
@@ -186,7 +205,7 @@ function renderBibOverview() {
   };
 
   const usedColours = {};
-  players.forEach(p => {
+  getFilteredPlayers().forEach(p => {
     const att = getAttendanceFor(p.id);
     if (att.attended && att.bib && colourMap[att.bib]) {
       if (!usedColours[att.bib]) usedColours[att.bib] = [];
@@ -251,13 +270,13 @@ function renderSession() {
   list.innerHTML = '';
 
   const hideAbsent = document.getElementById('toggleHideAbsent')?.checked;
-  const attendingCount = players.filter(
+  const attendingCount = getFilteredPlayers().filter(
     p => getAttendanceFor(p.id).attended
   ).length;
   document.getElementById('sessionSummary').textContent =
     attendingCount + ' attending';
 
-  players
+  getFilteredPlayers()
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach(player => {
@@ -391,9 +410,9 @@ function renderPlayers() {
   if (!list) return;
   list.innerHTML = '';
   document.getElementById('playersCountLabel').textContent =
-    players.length + ' players';
+    getFilteredPlayers().length + ' players';
 
-  players
+  getFilteredPlayers()
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach(player => {
@@ -442,6 +461,36 @@ function renderPlayers() {
       teamRow.appendChild(teamLabel);
       teamRow.appendChild(teamSelect);
 
+      const groupLabel = document.createElement('div');
+      groupLabel.className = 'player-meta';
+      groupLabel.textContent = 'Group: ';
+
+      const groupSelect = document.createElement('select');
+      ['', 'Year 1', 'Reception', 'Girls'].forEach(g => {
+        const o = document.createElement('option');
+        o.value = g;
+        o.textContent = g || 'No group';
+        groupSelect.appendChild(o);
+      });
+      groupSelect.value = player.group || '';
+      groupSelect.onchange = () => {
+        player.group = groupSelect.value || null;
+        savePlayersToFirebase();
+        renderPlayers();
+        renderSession();
+        renderTeams();
+        renderAnalytics();
+        renderBibOverview();
+        renderPaymentsToday();
+      };
+
+      const groupRow = document.createElement('div');
+      groupRow.style.display = 'flex';
+      groupRow.style.alignItems = 'center';
+      groupRow.style.gap = '6px';
+      groupRow.appendChild(groupLabel);
+      groupRow.appendChild(groupSelect);
+
       const att = getAttendanceFor(player.id);
       const metaEl = document.createElement('div');
       metaEl.className = 'player-meta';
@@ -474,6 +523,7 @@ function renderPlayers() {
 
       textWrap.appendChild(nameEl);
       textWrap.appendChild(teamRow);
+      textWrap.appendChild(groupRow);
       textWrap.appendChild(metaEl);
       textWrap.appendChild(abilityRow);
 
@@ -518,7 +568,7 @@ function renderTeams() {
     if (countEl) countEl.textContent = '0';
   });
 
-  players
+  getFilteredPlayers()
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach(player => {
@@ -670,7 +720,7 @@ function initPhotoModal() {
 // ==== RANDOM BIBS ====
 
 function randomiseBibs(teamCount) {
-  const attending = players.filter(
+  const attending = getFilteredPlayers().filter(
     p => getAttendanceFor(p.id).attended
   );
   if (attending.length === 0) {
@@ -719,7 +769,7 @@ function renderAnalytics() {
   if (!tbody) return;
   tbody.innerHTML = '';
 
-  players
+  getFilteredPlayers()
     .slice()
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach(player => {
@@ -813,7 +863,7 @@ function getTodaysPayment(player) {
 function getTotalCollectedToday() {
   const today = todayISO();
   let total = 0;
-  players.forEach(p => {
+  getFilteredPlayers().forEach(p => {
     (p.payments || []).forEach(pay => {
       if (pay.date === today && !pay.note) total += pay.amount;
     });
@@ -952,7 +1002,7 @@ function renderPaymentsToday() {
   container.innerHTML = '';
 
   const today = todayISO();
-  const attendees = players.filter(p => {
+  const attendees = getFilteredPlayers().filter(p => {
     const att = getAttendanceFor(p.id);
     return att.attended;
   });
@@ -1131,6 +1181,8 @@ function initControls() {
         return;
       }
       const id = Date.now() + Math.floor(Math.random() * 100000);
+      const groupSelect = document.getElementById('newPlayerGroup');
+      const group = groupSelect ? groupSelect.value || null : null;
       players.push({
         id,
         name,
@@ -1139,10 +1191,12 @@ function initControls() {
         ability: 3,
         attendanceHistory: {},
         balance: 0,
-        payments: []
+        payments: [],
+        group
       });
       savePlayersToFirebase();
       nameInput.value = '';
+      if (groupSelect) groupSelect.value = '';
     };
     nameInput.onkeyup = e => {
       if (e.key === 'Enter') addBtn.click();
@@ -1215,7 +1269,8 @@ function initControls() {
             ability: 3,
             attendanceHistory: {},
             balance: 0,
-            payments: []
+            payments: [],
+            group: null
           });
           existing.add(name.toLowerCase());
           added++;
@@ -1255,6 +1310,19 @@ function initControls() {
     document.getElementById('btnExportAnalytics');
   if (btnExportAnalytics) {
     btnExportAnalytics.onclick = exportAnalyticsCSV;
+  }
+
+  const groupFilter = document.getElementById('groupFilter');
+  if (groupFilter) {
+    groupFilter.onchange = () => {
+      currentGroupFilter = groupFilter.value;
+      renderSession();
+      renderPlayers();
+      renderTeams();
+      renderAnalytics();
+      renderBibOverview();
+      renderPaymentsToday();
+    };
   }
 }
 
